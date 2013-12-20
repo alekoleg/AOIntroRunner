@@ -13,6 +13,7 @@ typedef BOOL (^IntroConditionBlock) (void);
 
 @interface AOIntoRunner : NSObject
 
++ (instancetype)sharedRunner;
 + (void)runBlockOnFirstAppLaunchWithId:(NSString *)blockId block:(IntroBlock)block;
 
 + (void)runBlockOnAppUpdateWithId:(NSString *)blockId block:(IntroBlock)block;
