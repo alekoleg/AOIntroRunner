@@ -7,13 +7,30 @@
 //
 
 #import "AOAppDelegate.h"
-#import "AOIntoRunner.h"
+#import "AOIntroRunner.h"
 @implementation AOAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    [[AOIntoRunner sharedRunner]trackVersion];
+    
+    [AOIntroRunner runBlockOnFirstAppLaunchWithId:@"firwest" block:^{
+        NSLog(@"first run");
+    }];
+    
+    [AOIntroRunner runBlockOnAppUpdateWithId:@"Update" block:^{
+        NSLog(@"update run");
+    }];
+    
+    
+    [AOIntroRunner runBlockWithId:@"5time" onTime:5 block:^{
+        NSLog(@"runned on 5 time");
+    }];
+    
+    [AOIntroRunner runBlockWithId:@"3times" times:3 block:^{
+        NSLog(@"runed 3 times");
+    }];
+    
     return YES;
 }
 							
