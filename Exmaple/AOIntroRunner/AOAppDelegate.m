@@ -7,12 +7,13 @@
 //
 
 #import "AOAppDelegate.h"
-
+#import "AOIntoRunner.h"
 @implementation AOAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    [[AOIntoRunner sharedRunner]trackVersion];
     return YES;
 }
 							
