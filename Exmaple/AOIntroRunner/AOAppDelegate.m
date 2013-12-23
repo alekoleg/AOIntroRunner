@@ -1,8 +1,8 @@
 //
 //  AOAppDelegate.m
-//  AOInroRunner
+//  AOIntroRunner
 //
-//  Created by Alekseenko Oleg on 20.12.13.
+//  Created by Alekseenko Oleg on 23.12.13.
 //  Copyright (c) 2013 alekoleg. All rights reserved.
 //
 
