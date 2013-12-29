@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B332C6C818703E9100DA436D /* AOIntroRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = B332C6C718703E9100DA436D /* AOIntroRunner.m */; };
 		B3E3E3FA186818DF00042BA1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3E3E3F9186818DF00042BA1 /* Foundation.framework */; };
 		B3E3E3FC186818DF00042BA1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3E3E3FB186818DF00042BA1 /* CoreGraphics.framework */; };
 		B3E3E3FE186818DF00042BA1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3E3E3FD186818DF00042BA1 /* UIKit.framework */; };
@@ -21,7 +22,6 @@
 		B3E3E41B186818DF00042BA1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3E3E3FD186818DF00042BA1 /* UIKit.framework */; };
 		B3E3E423186818DF00042BA1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B3E3E421186818DF00042BA1 /* InfoPlist.strings */; };
 		B3E3E425186818DF00042BA1 /* AOIntroRunnerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E3E424186818DF00042BA1 /* AOIntroRunnerTests.m */; };
-		B3E3E4311868190E00042BA1 /* AOIntroRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E3E4301868190E00042BA1 /* AOIntroRunner.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +35,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B332C6C618703E9100DA436D /* AOIntroRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AOIntroRunner.h; sourceTree = "<group>"; };
+		B332C6C718703E9100DA436D /* AOIntroRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AOIntroRunner.m; sourceTree = "<group>"; };
 		B3E3E3F6186818DF00042BA1 /* AOIntroRunner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AOIntroRunner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E3E3F9186818DF00042BA1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B3E3E3FB186818DF00042BA1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -54,8 +56,6 @@
 		B3E3E420186818DF00042BA1 /* AOIntroRunnerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AOIntroRunnerTests-Info.plist"; sourceTree = "<group>"; };
 		B3E3E422186818DF00042BA1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B3E3E424186818DF00042BA1 /* AOIntroRunnerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AOIntroRunnerTests.m; sourceTree = "<group>"; };
-		B3E3E42F1868190E00042BA1 /* AOIntroRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AOIntroRunner.h; sourceTree = "<group>"; };
-		B3E3E4301868190E00042BA1 /* AOIntroRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AOIntroRunner.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,10 +82,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B332C6C518703E9100DA436D /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				B332C6C618703E9100DA436D /* AOIntroRunner.h */,
+				B332C6C718703E9100DA436D /* AOIntroRunner.m */,
+			);
+			name = Classes;
+			path = ../Classes;
+			sourceTree = "<group>";
+		};
 		B3E3E3ED186818DF00042BA1 = {
 			isa = PBXGroup;
 			children = (
-				B3E3E42E1868190E00042BA1 /* Classes */,
+				B332C6C518703E9100DA436D /* Classes */,
 				B3E3E3FF186818DF00042BA1 /* AOIntroRunner */,
 				B3E3E41E186818DF00042BA1 /* AOIntroRunnerTests */,
 				B3E3E3F8186818DF00042BA1 /* Frameworks */,
@@ -154,15 +164,6 @@
 				B3E3E421186818DF00042BA1 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		B3E3E42E1868190E00042BA1 /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				B3E3E42F1868190E00042BA1 /* AOIntroRunner.h */,
-				B3E3E4301868190E00042BA1 /* AOIntroRunner.m */,
-			);
-			path = Classes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -263,8 +264,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B332C6C818703E9100DA436D /* AOIntroRunner.m in Sources */,
 				B3E3E40A186818DF00042BA1 /* AOAppDelegate.m in Sources */,
-				B3E3E4311868190E00042BA1 /* AOIntroRunner.m in Sources */,
 				B3E3E410186818DF00042BA1 /* AOViewController.m in Sources */,
 				B3E3E406186818DF00042BA1 /* main.m in Sources */,
 			);
