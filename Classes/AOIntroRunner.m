@@ -10,13 +10,17 @@
 
 NSString * const AOIntroRunnerKeyFirstLaunchVersion = @"AOIntroRunnerKeyFirstLaunchVersion";
 NSString * const AOIntroRunnerKeyCurrentVersion = @"AOIntroRunnerKeyCurrentVersion";
+
 NSString * const AOIntroRunnerKeyFirstLaunchVersionIds = @"AOIntroRunnerFirstLaunchIds";
 NSString * const AOIntroRunnerKeyUpdateVersionIds = @"AOIntroRunnerKeyUpdateVersionIds";
+
 NSString * const AOIntroRunnerKeyRunBlockTimes = @"AOIntroRunnerKeyRunBlockTimes";
 NSString * const AOIntroRunnerKeyRunBlockOnTime = @"AOIntroRunnerKeyRunBlockOnTime";
 NSString * const AOIntroRunnerKeyBlockTitle = @"AOIntroRunnerKeyBlockTitle";
 NSString * const AOIntroRunnerKeyBlockTimeCount = @"AOIntroRunnerKeyBlockTimeCount";
 NSString * const AOIntroRunnerKeyBlockStatus = @"AOIntroRunnerKetBlockStatus";
+
+NSString * const AOIntroRunnerKeyRegularBlocks = @"AOIntroRunnerKeyRegularBlocks";
 
 static AOIntroRunner *_sharedRunner;
 
@@ -73,6 +77,14 @@ static AOIntroRunner *_sharedRunner;
 
 + (void)runBlockWithId:(NSString *)blockId times:(NSUInteger)times withCondition:(IntroConditionBlock)condition block:(IntroBlock)block {
     [[AOIntroRunner sharedRunner]runBlockWithId:blockId times:times withCondition:condition block:block];
+}
+
++ (void)runBlockWithId:(NSString *)blockId block:(IntroBlock)block {
+    [[AOIntroRunner sharedRunner]runBlockWithId:blockId block:block];
+}
+
++ (void)setBlockIdCompleted:(NSString *)blockId {
+    [[AOIntroRunner sharedRunner]setBlockIdCompleted:blockId];
 }
 
 //============================================================================================
@@ -156,6 +168,21 @@ static AOIntroRunner *_sharedRunner;
             }
         }
     }
+}
+
+- (void)runBlockWithId:(NSString *)blockId block:(IntroBlock)block {
+    NSMutableDictionary *info = [self blockInfoDicForKey:AOIntroRunnerKeyRegularBlocks withBlockId:blockId];
+    if (![info[AOIntroRunnerKeyBlockStatus]boolValue]) {
+        if (block) {
+            block();
+        }
+    }
+}
+
+- (void)setBlockIdCompleted:(NSString *)blockId {
+    NSMutableDictionary *info = [self blockInfoDicForKey:AOIntroRunnerKeyRegularBlocks withBlockId:blockId];
+    info[AOIntroRunnerKeyBlockStatus] = @YES;
+    [self saveBlockInfoDic:info forKey:AOIntroRunnerKeyRegularBlocks];
 }
 
 //============================================================================================

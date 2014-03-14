@@ -24,4 +24,6 @@ typedef BOOL (^IntroConditionBlock) (void);
 + (void)runBlockWithId:(NSString *)blockId times:(NSUInteger)times block:(IntroBlock)block;
 + (void)runBlockWithId:(NSString *)blockId times:(NSUInteger)times withCondition:(IntroConditionBlock)condition block:(IntroBlock)block;
 
++ (void)runBlockWithId:(NSString *)blockId block:(IntroBlock)block;
++ (void)setBlockIdCompleted:(NSString *)blockId;
 @end
