@@ -87,6 +87,9 @@ static AOIntroRunner *_sharedRunner;
     [[AOIntroRunner sharedRunner]setBlockIdCompleted:blockId];
 }
 
++ (BOOL)isBlockRunned:(NSString *)blockId {
+    return [[AOIntroRunner sharedRunner] isBlockRunned:blockId];
+}
 //============================================================================================
 #pragma mark - Actions -
 //--------------------------------------------------------------------------------------------
@@ -183,6 +186,20 @@ static AOIntroRunner *_sharedRunner;
     NSMutableDictionary *info = [self blockInfoDicForKey:AOIntroRunnerKeyRegularBlocks withBlockId:blockId];
     info[AOIntroRunnerKeyBlockStatus] = @YES;
     [self saveBlockInfoDic:info forKey:AOIntroRunnerKeyRegularBlocks];
+}
+
+- (BOOL)isBlockRunned:(NSString *)blockId {
+    //search by all blocks types
+    NSMutableDictionary *infoRegular = [self blockInfoDicForKey:AOIntroRunnerKeyRegularBlocks withBlockId:blockId];
+    NSMutableDictionary *infoTimes = [self blockInfoDicForKey:AOIntroRunnerKeyRunBlockTimes withBlockId:blockId];
+    NSMutableDictionary *infoOnTimes = [self blockInfoDicForKey:AOIntroRunnerKeyRunBlockOnTime withBlockId:blockId];
+    NSArray *resuls = @[infoRegular, infoOnTimes, infoTimes];
+    for (NSDictionary *dic in resuls) {
+        if ([dic[AOIntroRunnerKeyBlockStatus] boolValue]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 //============================================================================================

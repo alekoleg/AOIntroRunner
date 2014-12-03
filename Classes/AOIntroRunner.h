@@ -26,4 +26,7 @@ typedef BOOL (^IntroConditionBlock) (void);
 
 + (void)runBlockWithId:(NSString *)blockId block:(IntroBlock)block;
 + (void)setBlockIdCompleted:(NSString *)blockId;
+
++ (BOOL)isBlockRunned:(NSString *)blockId;
+
 @end
