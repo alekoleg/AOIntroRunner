@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'AOIntroRunner'
-  s.version      = '0.0.1'
+  s.version      = '0.0.2'
   s.summary      = 'Show Intro'
   s.description  = 'Show intro screen anywhere'
   s.homepage     = 'https://github.com/alekoleg/AOIntroRunner.git'

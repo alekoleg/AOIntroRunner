@@ -68,7 +68,7 @@ static AOIntroRunner *_sharedRunner;
 }
 
 + (void)runBlockWithId:(NSString *)blockId onTime:(NSUInteger)time withCondition:(IntroConditionBlock)condition block:(IntroBlock)block {
-    [[AOIntroRunner sharedRunner]runBlockWithId:block onTime:time withCondition:condition block:block];
+    [[AOIntroRunner sharedRunner]runBlockWithId:blockId onTime:time withCondition:condition block:block];
 }
 
 + (void)runBlockWithId:(NSString *)blockId times:(NSUInteger)times block:(IntroBlock)block {
