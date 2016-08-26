@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		84ECFBE21D703A160077EC6E /* Launch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84ECFBE11D703A160077EC6E /* Launch.xib */; };
 		B332C6C818703E9100DA436D /* AOIntroRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = B332C6C718703E9100DA436D /* AOIntroRunner.m */; };
 		B3E3E3FA186818DF00042BA1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3E3E3F9186818DF00042BA1 /* Foundation.framework */; };
 		B3E3E3FC186818DF00042BA1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3E3E3FB186818DF00042BA1 /* CoreGraphics.framework */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		84ECFBE11D703A160077EC6E /* Launch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Launch.xib; sourceTree = "<group>"; };
 		B332C6C618703E9100DA436D /* AOIntroRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AOIntroRunner.h; sourceTree = "<group>"; };
 		B332C6C718703E9100DA436D /* AOIntroRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AOIntroRunner.m; sourceTree = "<group>"; };
 		B3E3E3F6186818DF00042BA1 /* AOIntroRunner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AOIntroRunner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -129,6 +131,7 @@
 				B3E3E408186818DF00042BA1 /* AOAppDelegate.h */,
 				B3E3E409186818DF00042BA1 /* AOAppDelegate.m */,
 				B3E3E40B186818DF00042BA1 /* Main.storyboard */,
+				84ECFBE11D703A160077EC6E /* Launch.xib */,
 				B3E3E40E186818DF00042BA1 /* AOViewController.h */,
 				B3E3E40F186818DF00042BA1 /* AOViewController.m */,
 				B3E3E411186818DF00042BA1 /* Images.xcassets */,
@@ -245,6 +248,7 @@
 			files = (
 				B3E3E412186818DF00042BA1 /* Images.xcassets in Resources */,
 				B3E3E404186818DF00042BA1 /* InfoPlist.strings in Resources */,
+				84ECFBE21D703A160077EC6E /* Launch.xib in Resources */,
 				B3E3E40D186818DF00042BA1 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -393,7 +397,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AOIntroRunner/AOIntroRunner-Prefix.pch";
 				INFOPLIST_FILE = "AOIntroRunner/AOIntroRunner-Info.plist";
@@ -406,7 +409,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AOIntroRunner/AOIntroRunner-Prefix.pch";
 				INFOPLIST_FILE = "AOIntroRunner/AOIntroRunner-Info.plist";

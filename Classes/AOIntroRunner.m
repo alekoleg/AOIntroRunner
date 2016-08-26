@@ -8,25 +8,27 @@
 
 #import "AOIntroRunner.h"
 
+// versions
 NSString * const AOIntroRunnerKeyFirstLaunchVersion = @"AOIntroRunnerKeyFirstLaunchVersion";
 NSString * const AOIntroRunnerKeyCurrentVersion = @"AOIntroRunnerKeyCurrentVersion";
 
-NSString * const AOIntroRunnerKeyFirstLaunchVersionIds = @"AOIntroRunnerFirstLaunchIds";
-NSString * const AOIntroRunnerKeyUpdateVersionIds = @"AOIntroRunnerKeyUpdateVersionIds";
-
-NSString * const AOIntroRunnerKeyRunBlockTimes = @"AOIntroRunnerKeyRunBlockTimes";
-NSString * const AOIntroRunnerKeyRunBlockOnTime = @"AOIntroRunnerKeyRunBlockOnTime";
+// values
 NSString * const AOIntroRunnerKeyBlockTitle = @"AOIntroRunnerKeyBlockTitle";
 NSString * const AOIntroRunnerKeyBlockTimeCount = @"AOIntroRunnerKeyBlockTimeCount";
 NSString * const AOIntroRunnerKeyBlockStatus = @"AOIntroRunnerKetBlockStatus";
 
-NSString * const AOIntroRunnerKeyRegularBlocks = @"AOIntroRunnerKeyRegularBlocks";
+// block store key
+NSString * const AOIntroRunnerKeyBlocks = @"AOIntroRunnerKeyBlocks";
+// user defaults suite name
+NSString * const AOIntroRunnedSuiteName = @"com.introrunner.suitename";
 
 static AOIntroRunner *_sharedRunner;
 
-@implementation AOIntroRunner {
-    NSUserDefaults *_defaults;
-}
+@interface AOIntroRunner ()
+@property (nonatomic, strong) NSUserDefaults *defaults;
+@end
+
+@implementation AOIntroRunner
 
 //============================================================================================
 #pragma mark - Init -
@@ -38,7 +40,8 @@ static AOIntroRunner *_sharedRunner;
 
 - (id)initSave {
     if (self = [super init]) {
-        _defaults = [NSUserDefaults standardUserDefaults];
+        self.defaults = [[NSUserDefaults alloc] initWithSuiteName:AOIntroRunnedSuiteName];
+        [self p_migrateFromStandartUserDefaults];
     }
     return self;
 }
@@ -90,26 +93,26 @@ static AOIntroRunner *_sharedRunner;
 + (BOOL)isBlockRunned:(NSString *)blockId {
     return [[AOIntroRunner sharedRunner] isBlockRunned:blockId];
 }
+
++ (void)clear {
+    return [[AOIntroRunner sharedRunner] clearSavedIds];
+}
+
 //============================================================================================
 #pragma mark - Actions -
 //--------------------------------------------------------------------------------------------
-- (void)trackVersion {
-    
-}
 
 - (void)runBlockOnFirstAppLaunchWithId:(NSString *)blockId block:(IntroBlock)block {
     NSAssert(blockId, @"BlockId cannot be nil");
     if ([[self firstLaunchVersion] isEqualToString:[self currentAppVersion]]) {
-        NSString *key = AOIntroRunnerKeyFirstLaunchVersionIds;
-        [self evalueteBlock:block withBlockId:blockId forKey:key];
+        [self evalueteBlock:block withBlockId:blockId forKey:AOIntroRunnerKeyBlocks];
     }
 }
 
 - (void)runBlockOnAppUpdateWithId:(NSString *)blockId block:(IntroBlock)block {
     NSAssert(blockId, @"BlockId cannot be nil");
     if (![[self firstLaunchVersion]isEqualToString:[self currentAppVersion]]) {
-        NSString *key = [AOIntroRunnerKeyUpdateVersionIds stringByAppendingFormat:@"_%@", [self currentAppVersion]];
-        [self evalueteBlock:block withBlockId:blockId forKey:key];
+        [self evalueteBlock:block withBlockId:blockId forKey:AOIntroRunnerKeyBlocks];
     }
 }
 
@@ -120,7 +123,7 @@ static AOIntroRunner *_sharedRunner;
 
 - (void)runBlockWithId:(NSString *)blockId onTime:(NSUInteger)time withCondition:(IntroConditionBlock)condition block:(IntroBlock)block {
     NSAssert(blockId, @"BlockId cannot be nil");
-    NSMutableDictionary *blockDic = [self blockInfoDicForKey:AOIntroRunnerKeyRunBlockOnTime withBlockId:blockId];
+    NSMutableDictionary *blockDic = [self blockInfoDicForKey:AOIntroRunnerKeyBlocks withBlockId:blockId];
     if (![blockDic[AOIntroRunnerKeyBlockStatus]boolValue]) {
         BOOL resulCondition = !(condition);
         if (condition) {
@@ -131,13 +134,13 @@ static AOIntroRunner *_sharedRunner;
             NSInteger currentTime = [blockDic[AOIntroRunnerKeyBlockTimeCount]integerValue] + 1;
             if (currentTime == time) {
                 blockDic[AOIntroRunnerKeyBlockStatus] = @YES;
-                [self saveBlockInfoDic:blockDic forKey:AOIntroRunnerKeyRunBlockOnTime];
+                [self saveBlockInfoDic:blockDic forKey:AOIntroRunnerKeyBlocks];
                 if (block) {
                     block();
                 }
             } else {
                 blockDic[AOIntroRunnerKeyBlockTimeCount] = @(currentTime);
-                [self saveBlockInfoDic:blockDic forKey:AOIntroRunnerKeyRunBlockOnTime];
+                [self saveBlockInfoDic:blockDic forKey:AOIntroRunnerKeyBlocks];
             }
         }
     }
@@ -150,7 +153,7 @@ static AOIntroRunner *_sharedRunner;
 - (void)runBlockWithId:(NSString *)blockId times:(NSUInteger)times withCondition:(IntroConditionBlock)condition block:(IntroBlock)block {
     
     NSAssert(blockId, @"BlockId cannot be nil");
-    NSMutableDictionary *blockDic = [self blockInfoDicForKey:AOIntroRunnerKeyRunBlockTimes withBlockId:blockId];
+    NSMutableDictionary *blockDic = [self blockInfoDicForKey:AOIntroRunnerKeyBlocks withBlockId:blockId];
     if (![blockDic[AOIntroRunnerKeyBlockStatus]boolValue]) {
         BOOL resulCondition = !(condition);
         if (condition) {
@@ -161,20 +164,20 @@ static AOIntroRunner *_sharedRunner;
             NSInteger currentTime = [blockDic[AOIntroRunnerKeyBlockTimeCount]integerValue] + 1;
             if (currentTime <= times) {
                 blockDic[AOIntroRunnerKeyBlockTimeCount] = @(currentTime);
-                [self saveBlockInfoDic:blockDic forKey:AOIntroRunnerKeyRunBlockTimes];
+                [self saveBlockInfoDic:blockDic forKey:AOIntroRunnerKeyBlocks];
                 if (block) {
                     block();
                 }
             } else {
                 blockDic[AOIntroRunnerKeyBlockStatus] = @YES;
-                [self saveBlockInfoDic:blockDic forKey:AOIntroRunnerKeyRunBlockTimes];
+                [self saveBlockInfoDic:blockDic forKey:AOIntroRunnerKeyBlocks];
             }
         }
     }
 }
 
 - (void)runBlockWithId:(NSString *)blockId block:(IntroBlock)block {
-    NSMutableDictionary *info = [self blockInfoDicForKey:AOIntroRunnerKeyRegularBlocks withBlockId:blockId];
+    NSMutableDictionary *info = [self blockInfoDicForKey:AOIntroRunnerKeyBlocks withBlockId:blockId];
     if (![info[AOIntroRunnerKeyBlockStatus]boolValue]) {
         if (block) {
             block();
@@ -183,23 +186,19 @@ static AOIntroRunner *_sharedRunner;
 }
 
 - (void)setBlockIdCompleted:(NSString *)blockId {
-    NSMutableDictionary *info = [self blockInfoDicForKey:AOIntroRunnerKeyRegularBlocks withBlockId:blockId];
+    NSMutableDictionary *info = [self blockInfoDicForKey:AOIntroRunnerKeyBlocks withBlockId:blockId];
     info[AOIntroRunnerKeyBlockStatus] = @YES;
-    [self saveBlockInfoDic:info forKey:AOIntroRunnerKeyRegularBlocks];
+    [self saveBlockInfoDic:info forKey:AOIntroRunnerKeyBlocks];
 }
 
 - (BOOL)isBlockRunned:(NSString *)blockId {
     //search by all blocks types
-    NSMutableDictionary *infoRegular = [self blockInfoDicForKey:AOIntroRunnerKeyRegularBlocks withBlockId:blockId];
-    NSMutableDictionary *infoTimes = [self blockInfoDicForKey:AOIntroRunnerKeyRunBlockTimes withBlockId:blockId];
-    NSMutableDictionary *infoOnTimes = [self blockInfoDicForKey:AOIntroRunnerKeyRunBlockOnTime withBlockId:blockId];
-    NSArray *resuls = @[infoRegular, infoOnTimes, infoTimes];
-    for (NSDictionary *dic in resuls) {
-        if ([dic[AOIntroRunnerKeyBlockStatus] boolValue]) {
-            return YES;
-        }
-    }
-    return NO;
+    NSDictionary *dic = [self blockInfoDicForKey:AOIntroRunnerKeyBlocks withBlockId:blockId];
+    return [dic[AOIntroRunnerKeyBlockStatus] boolValue];
+}
+
+- (void)clearSavedIds {
+    [self.defaults removeSuiteNamed:AOIntroRunnedSuiteName];
 }
 
 //============================================================================================
@@ -207,21 +206,23 @@ static AOIntroRunner *_sharedRunner;
 //--------------------------------------------------------------------------------------------
 
 - (NSString *)firstLaunchVersion {
-    if (![[NSUserDefaults standardUserDefaults]valueForKey:AOIntroRunnerKeyFirstLaunchVersion]) {
-        NSString *path = [[[NSBundle mainBundle]bundlePath]stringByDeletingLastPathComponent];
-        NSString *documents = [path stringByAppendingPathComponent:@"Documents"];
+    if (![self.defaults valueForKey:AOIntroRunnerKeyFirstLaunchVersion]) {
+        NSString *documents = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
         NSError *error = nil;
         NSDictionary *dic = [[NSFileManager defaultManager] attributesOfItemAtPath:documents error:&error];
         if (error) {
             NSLog(@"%@", error);
         }
-        NSDateComponents *components = [[NSCalendar currentCalendar]components:NSDayCalendarUnit fromDate:dic[NSFileCreationDate] toDate:[NSDate date] options:0];
+        NSDateComponents *components = [[NSCalendar currentCalendar] components:NSDayCalendarUnit
+                                                                       fromDate:dic[NSFileCreationDate]
+                                                                         toDate:[NSDate date]
+                                                                        options:0];
         BOOL result = (components.day < 1);
         NSString *verion = result ? [self currentAppVersion] : @"-0.0.1";
-        [[NSUserDefaults standardUserDefaults]setObject:verion forKey:AOIntroRunnerKeyFirstLaunchVersion];
-        [[NSUserDefaults standardUserDefaults]synchronize];
+        [self.defaults setObject:verion forKey:AOIntroRunnerKeyFirstLaunchVersion];
+        [self.defaults synchronize];
     }
-    return [[NSUserDefaults standardUserDefaults]valueForKey:AOIntroRunnerKeyFirstLaunchVersion];
+    return [self.defaults valueForKey:AOIntroRunnerKeyFirstLaunchVersion];
 }
 
 - (NSString *)currentAppVersion {
@@ -229,20 +230,18 @@ static AOIntroRunner *_sharedRunner;
 }
 
 - (void)evalueteBlock:(IntroBlock)block withBlockId:(NSString *)blockId forKey:(NSString *)key {
-    NSMutableArray *ids = [[[NSUserDefaults standardUserDefaults]valueForKey:key]mutableCopy];
-    if (!ids) ids = [NSMutableArray array];
-    if (![ids containsObject:blockId]) {
-        [ids addObject:blockId];
-        [[NSUserDefaults standardUserDefaults]setObject:ids forKey:key];
-        [[NSUserDefaults standardUserDefaults]synchronize];
+    NSMutableDictionary *dic = [self blockInfoDicForKey:key withBlockId:blockId];
+    if (![dic[AOIntroRunnerKeyBlockStatus] boolValue]) {
         if (block) {
             block();
         }
+        dic[AOIntroRunnerKeyBlockStatus] = @YES;
+        [self saveBlockInfoDic:dic forKey:key];
     }
 }
 
 - (NSMutableDictionary *)blockInfoDicForKey:(NSString *)key withBlockId:(NSString *)blockId {
-    NSMutableArray *array = [[[NSUserDefaults standardUserDefaults]valueForKey:key]mutableCopy];
+    NSMutableArray *array = [[self.defaults valueForKey:key]mutableCopy];
     if (!array) array = [NSMutableArray array];
     NSMutableDictionary *blockDic = nil;
     for (NSDictionary *dic in array) {
@@ -253,13 +252,16 @@ static AOIntroRunner *_sharedRunner;
     }
     
     if (!blockDic) {
-        blockDic = [NSMutableDictionary dictionaryWithObjects:@[blockId, @0, @NO] forKeys:@[AOIntroRunnerKeyBlockTitle, AOIntroRunnerKeyBlockTimeCount, AOIntroRunnerKeyBlockStatus]];
+        blockDic = [NSMutableDictionary dictionaryWithObjects:@[blockId, @0, @NO]
+                                                      forKeys:@[AOIntroRunnerKeyBlockTitle,
+                                                                AOIntroRunnerKeyBlockTimeCount,
+                                                                AOIntroRunnerKeyBlockStatus]];
     }
     return blockDic;
 }
 
 - (void)saveBlockInfoDic:(NSDictionary *)dicBlock forKey:(NSString *)key {
-    NSMutableArray *array = [[[NSUserDefaults standardUserDefaults]valueForKey:key]mutableCopy];
+    NSMutableArray *array = [[self.defaults valueForKey:key]mutableCopy];
     if (!array) array = [NSMutableArray array];
     BOOL found = NO;
     for (int i = 0; i < array.count; i++) {
@@ -274,8 +276,49 @@ static AOIntroRunner *_sharedRunner;
     if (!found) {
         [array addObject:dicBlock];
     }
-    [[NSUserDefaults standardUserDefaults]setObject:array forKey:key];
-    [[NSUserDefaults standardUserDefaults]synchronize];
+    [self.defaults setObject:array forKey:key];
+    [self.defaults synchronize];
+}
+
+- (void)p_migrateFromStandartUserDefaults {
+
+    void (^migrateKey)(NSString *key) = ^(NSString *key) {
+
+        id object = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+        if (object) {
+            [self.defaults setObject:object forKey:key];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+        }
+    };
+    migrateKey(AOIntroRunnerKeyFirstLaunchVersion);
+    migrateKey(AOIntroRunnerKeyCurrentVersion);
+
+    void (^migrateIdsToDic)(NSString *key) = ^(NSString *key) {
+        NSArray *ids = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+        for (NSString *blockId in ids) {
+            NSDictionary *dic = @{ AOIntroRunnerKeyBlockTitle : blockId,
+                                   AOIntroRunnerKeyBlockTimeCount : @1,
+                                   AOIntroRunnerKeyBlockStatus : @YES };
+            [self saveBlockInfoDic:dic forKey:AOIntroRunnerKeyBlocks];
+        }
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+    };
+
+    migrateIdsToDic(@"AOIntroRunnerFirstLaunchIds");
+    migrateIdsToDic([@"AOIntroRunnerKeyUpdateVersionIds" stringByAppendingFormat:@"_%@", [self currentAppVersion]]);
+
+    void (^migrateOldArrayKeyToNew)(NSString *key) = ^(NSString *key) {
+        NSArray *dics = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+        for (NSMutableDictionary *blockDic in dics) {
+            [self saveBlockInfoDic:blockDic forKey:AOIntroRunnerKeyBlocks];
+        }
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+    };
+    migrateOldArrayKeyToNew(@"AOIntroRunnerKeyRunBlockTimes");
+    migrateOldArrayKeyToNew(@"AOIntroRunnerKeyRunBlockOnTime");
+    migrateOldArrayKeyToNew(@"AOIntroRunnerKeyRegularBlocks");
+
+    [self.defaults synchronize];
 }
 
 @end
