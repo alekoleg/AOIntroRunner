@@ -14,7 +14,7 @@
 {
     // Override point for customization after application launch.
     
-    [AOIntroRunner runBlockOnFirstAppLaunchWithId:@"firwest" block:^{
+    [AOIntroRunner runBlockOnFirstAppLaunchWithId:@"firstId" block:^{
         NSLog(@"first run");
     }];
     
@@ -28,7 +28,7 @@
     }];
     
     [AOIntroRunner runBlockWithId:@"3times" times:3 block:^{
-        NSLog(@"runed 3 times");
+        NSLog(@"runned 3 times");
     }];
     
     return YES;
